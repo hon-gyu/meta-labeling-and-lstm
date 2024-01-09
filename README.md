@@ -159,10 +159,15 @@ LSTM:
 ![image](assets/graph/LSTM%20cell.jpg)
 
 $$f_t = \sigma(W_{fx}x_t + W_{fh}h_{t-1}+b_f)$$
+
 $$i_t = \sigma(W_{ix}x_t + W_{ih}h_{t-1}+b_i)$$
+
 $$o_t = \sigma(W_{ox}x_t + W_{oh}h_{t-1}+b_o)$$
-$$\tilde{c_t} = tanh( W_{cx} x_t + W_{ch} h_{t-1} + b_c)$$
+
+$$\tilde{c}_ t = tanh( W_{cx} x_t + W_{ch} h_{t-1} + b_c)$$
+
 $$c_t = c_{t-1} \ast f_t + i_t \ast \tilde{c}_t$$
+
 $$h_t = o_t \ast tanh(c_t)$$
 
 1. Forget Gate
