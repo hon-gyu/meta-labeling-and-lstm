@@ -26,8 +26,6 @@ This repository is a reorganisation of [my master's dissertation](assets/paper/U
       - [Features for Secondary Model](#features-for-secondary-model)
     - [3.2 Preprocessing](#32-preprocessing)
     - [3.3 Model Details](#33-model-details)
-        - [Labels](#labels)
-        - [Stacked LSTM](#stacked-lstm)
     - [3.4 Cross-validation](#34-cross-validation)
     - [3.5 Trading Strategy](#35-trading-strategy)
       - [3.5.1 Threshold Mechanism for Raw Trading Signals](#351-threshold-mechanism-for-raw-trading-signals)
@@ -96,7 +94,7 @@ How can the model’s performance metrics, such as precision and recall, be rela
 
 Consider the following example derived from [Advances in financial machine learning](https://www.wiley.com/en-gb/Advances+in+Financial+Machine+Learning-p-9781119482086). Suppose a strategy generates $n$ independent and identically distributed (IID) bets per year, with each bet having a probability $p$ of generating a profit of $\pi$ and a probability $1-p$ of incurring a loss of $-\pi$. If we define $X_i$ as the outcome, with $P[X_i=\pi]=p$ and $P[X_i=-\pi]=1-p$, then $p$ represents the precision of a binary classifier. The annualized Sharpe ratio can be calculated as follows:
 
-$$SharpeRatio = \frac{Return}{StandardDeviation} = \frac{nE[X_i]}{\sqrt{nV[X_i]}} = \frac{2p-1}{2\sqrt{p(1-p)}} \sqrt{n}$$.
+$$SharpeRatio = \frac{Return}{StandardDeviation} = \frac{nE[X_i]}{\sqrt{nV[X_i]}} = \frac{2p-1}{2\sqrt{p(1-p)}} \sqrt{n}$$
 
 In the case of symmetric profits and losses, the risk-adjusted performance of the strategy is positively correlated with precision and the number of investment opportunities (recall). These conclusions hold true for asymmetric payouts as well.
 
@@ -163,21 +161,21 @@ LSTM:
 $$f_t = \sigma(W_{fx}x_t + W_{fh}h_{t-1}+b_f)$$
 $$i_t = \sigma(W_{ix}x_t + W_{ih}h_{t-1}+b_i)$$
 $$o_t = \sigma(W_{ox}x_t + W_{oh}h_{t-1}+b_o)$$
-$$\tilde{c}_t = tanh(W_{cx}x_t + W_{ch}h_{t-1}+b_c)$$
+$$\tilde{c}_ t = tanh( W_ {cx} x_ t + W_ {ch} h_ {t-1} + b_ c)$$
 $$c_t = c_{t-1} \ast f_t + i_t \ast \tilde{c}_t$$
 $$h_t = o_t \ast tanh(c_t)$$
 
 1. Forget Gate
 
-The forget gate determines the degree to which the previous memory cell state (\( c_{t-1} \)) is either forgotten or retained. It takes the current input (\( x_t \)) and the preceding hidden state (\( h_{t-1} \)) as inputs, which are then processed through a sigmoid activation function. The output, a forget gate vector (\( f_t \)), ranges from 0 to 1. This vector modulates the amount of the previous memory cell state (\( c_{t-1} \)) to retain (\( c_{t-1}f_t \)). A value close to 0 instructs the network to forget that component, whereas a value near 1 suggests retention.
+The forget gate determines the degree to which the previous memory cell state ($c_{t-1}$) is either forgotten or retained. It takes the current input ($x_t$) and the preceding hidden state ($h_{t-1}$) as inputs, which are then processed through a sigmoid activation function. The output, a forget gate vector ($f_t$), ranges from 0 to 1. This vector modulates the amount of the previous memory cell state ($c_{t-1}$) to retain ($c_{t-1}f_t$). A value close to 0 instructs the network to forget that component, whereas a value near 1 suggests retention.
 
 2. Input Gate
 
-The input gate manages the incorporation of new information into the memory cell. It utilizes the current input (\( x_t \)), and the prior cell and hidden states (\( c_{t-1} \) and \( h_{t-1} \)) as inputs. Through a sigmoid activation function, it produces a gate vector (\( i_t \)) ranging from 0 to 1 to decide the amount of new information to store. Additionally, a tanh activation function generates a cell state candidate (\( g_t \)). The gate vector (\( i_t \)) acts as a filter, determining which parts of \( g_t \) are incorporated into the memory cell (\( i_t g_t \)). A value of 0 for \( i_t \) indicates ignoring the corresponding component, whereas a value of 1 suggests full inclusion. This filtered information is combined with the prior memory cell state to update the current cell state (\( c_t \)).
+The input gate manages the incorporation of new information into the memory cell. It utilizes the current input ($x_t$), and the prior cell and hidden states ($c_{t-1}$ and $h_{t-1}$) as inputs. Through a sigmoid activation function, it produces a gate vector ($i_t$) ranging from 0 to 1 to decide the amount of new information to store. Additionally, a tanh activation function generates a cell state candidate ($g_t$). The gate vector ($i_t$) acts as a filter, determining which parts of ($g_t$) are incorporated into the memory cell ($i_t g_t$). A value of 0 for ($i_t$) indicates ignoring the corresponding component, whereas a value of 1 suggests full inclusion. This filtered information is combined with the prior memory cell state to update the current cell state ($c_t$).
 
 1. Output Gate
   
-The output gate regulates the final output from the memory cell. It takes the current input (\( x_t \)) and previous hidden state (\( h_{t-1} \)) as inputs and employs a sigmoid activation function to produce an output gate vector (\( o_t \)) ranging from 0 to 1. This vector governs the influence of the current cell state (\( c_t \)) on the LSTM cell's final output (\( h_t \)). A value of 0 for \( o_t \) suppresses the output, whereas a value of 1 fully expresses it.
+The output gate regulates the final output from the memory cell. It takes the current input ($x_t$) and previous hidden state ($h_{t-1}$) as inputs and employs a sigmoid activation function to produce an output gate vector ($o_t$) ranging from 0 to 1. This vector governs the influence of the current cell state ($c_t$) on the LSTM cell's final output ($h_t$). A value of 0 for ($o_t$) suppresses the output, whereas a value of 1 fully expresses it.
 
 ## 3. Implementation
 
@@ -247,7 +245,7 @@ To avoid information leakage, we apply min-max scaling only after partitioning t
 
 ### 3.3 Model Details
 
-##### Labels
+**Labels**
 
 We'll apply LSTM to both primary and secondary models. In meta-labelling, primary and secondary models have separate target variables. 
 
@@ -275,7 +273,7 @@ y_{2, t} =
 \end{align}
 $$
 
-##### Stacked LSTM
+**Stacked LSTM**
 
 For minute-level stock prediction, we compare single-layer LSTM with two-layer LSTM architectures. Generally, the two-layer LSTM performs better across various hyperparameter combinations. 
 
@@ -406,7 +404,7 @@ In conclusion, meta-labeling with the ECDF method enhances the strategy metrics 
 ## Main Reference
 
 - [Lopez de Prado, Marcos (2018). Advances in financial machine learning](https://www.wiley.com/en-gb/Advances+in+Financial+Machine+Learning-p-9781119482086).
-- [Joubert, Jacques Francois (Aug. 2022). “Meta-Labeling: Theory and Framework”](https://www.pm-research.com/content/iijjfds/early/2022/06/23/jfds20221098)
-- [Meyer, Michael, Barziy, Illya, and Joubert, Jacques Francois. “Meta-Labeling: Calibration and Position Sizing”](https://www.pm-research.com/content/iijjfds/early/2023/03/08/jfds20231119)
-- [Meyer, Michael, Joubert, Jacques Francois, and Alfeus, Mesias. “Meta-Labeling Architecture”](https://www.pm-research.com/content/iijjfds/early/2022/09/16/jfds20221108)
-- [Thumm, Dennis, Barucca, Paolo, and Joubert, Jacques Francois. “Ensemble MetaLabeling”.](https://www.pm-research.com/content/iijjfds/early/2022/12/14/jfds20221114)
+- [Joubert, Jacques Francois (2022). “Meta-Labeling: Theory and Framework”](https://www.pm-research.com/content/iijjfds/early/2022/06/23/jfds20221098)
+- [Meyer, Michael, Barziy, Illya, and Joubert, Jacques Francois (2023). “Meta-Labeling: Calibration and Position Sizing”](https://www.pm-research.com/content/iijjfds/early/2023/03/08/jfds20231119)
+- [Meyer, Michael, Joubert, Jacques Francois, and Alfeus, Mesias (2022). “Meta-Labeling Architecture”](https://www.pm-research.com/content/iijjfds/early/2022/09/16/jfds20221108)
+- [Thumm, Dennis, Barucca, Paolo, and Joubert, Jacques Francois (2022). “Ensemble MetaLabeling”.](https://www.pm-research.com/content/iijjfds/early/2022/12/14/jfds20221114)
