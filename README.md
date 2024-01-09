@@ -39,7 +39,7 @@ This repository is a reorganisation of [my master's dissertation](assets/paper/U
       - [4.2.3 Strategy-related Metrics](#423-strategy-related-metrics)
     - [4.3 Experiment 3: Meta-labeling with ECDF Method](#43-experiment-3-meta-labeling-with-ecdf-method)
     - [4.4 Experiment 4: All Features in Primary Model (Control Group)](#44-experiment-4-all-features-in-primary-model-control-group)
-  - [Main Reference](#main-reference)
+  - [5. Main Reference](#5-main-reference)
 
 
 
@@ -406,7 +406,7 @@ In conclusion, meta-labeling with the ECDF method enhances the strategy metrics 
 ![image](assets/graph/E4.png)
 
 
-## Main Reference
+## 5. Main Reference
 
 - [Lopez de Prado, Marcos (2018). Advances in financial machine learning](https://www.wiley.com/en-gb/Advances+in+Financial+Machine+Learning-p-9781119482086).
 - [Joubert, Jacques Francois (2022). “Meta-Labeling: Theory and Framework”](https://www.pm-research.com/content/iijjfds/early/2022/06/23/jfds20221098)
