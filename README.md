@@ -1,15 +1,17 @@
 # LSTM and Meta-labeling
 
-An implementation that applies meta-labeling to minute-frequency stock data, utilizing LSTM as the primary model for price direction prediction (side), which forms the basis for a trading strategy augmented by a secondary meta-labeling layer (size) to filter false positives and improve risk-return metrics.
+An implementation applying meta-labeling to minute-frequency stock data. Utilized LSTM as the primary model for price direction prediction (side), upon which a trading strategy is built. A secondary meta-labeling layer (size) helps to filter false positives and improve risk-return metrics.
 
 This repository is a reorganisation of [my master's dissertation](assets/paper/Using%20LSTM%20Model%20for%20Meta-labeling%20in%20Quantitative%20Trading%20%20A%20Practical%20Analysis%20with%20Minute%20Stock%20Data.pdf). 
-``
+
 1. Using minute-level price and volume data of Apple, 20 technical indicators are derived and used as input for a LSTM model to predict the price movement.
 2. Based on this side prediction (up or down), a threshold mechanism is used to construct the underlying trading strategy.
 3. Then, meta-labeling applies a secondary model to assess the credibility of this trading decision. It utilize addtional features to predict the appropriate trading size. Meta-labeling helps to refine trading signals, filtering false positives and improving the profitability of trading strategies.
 4. Two different position sizing methods, all-or-nothing and ECDF, are compared. Both classification metrics for machine learning model (precision and recall) and risk-return metrics for strategy (Sharpe) are used to evaluate the efficiency of LSTM and meta-labeling.
 
+## Table of Contents
 - [LSTM and Meta-labeling](#lstm-and-meta-labeling)
+  - [Table of Contents](#table-of-contents)
   - [0. Thoughts after Five Months](#0-thoughts-after-five-months)
   - [1. Meta-labeling](#1-meta-labeling)
     - [Classifier’s Performance Metrics vs. Strategy’s Risk-return Metrics](#classifiers-performance-metrics-vs-strategys-risk-return-metrics)
